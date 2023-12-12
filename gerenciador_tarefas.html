@@ -16,7 +16,7 @@
 <body>
     <nav class="navbar navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" id="usuarioSessaoNome">aaaaa</a>
+            <a class="navbar-brand" id="usuarioSessaoNome">{usuarioNome}</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
                 aria-label="Toggle navigation">
@@ -92,6 +92,60 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-success">Cadastrar</button>
+                </form>
+                <form id="edicaoTarefa" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="nomeTarefa" class="form-label">Tarefa</label>
+                                <input type="text" class="form-control" id="nomeTarefa"
+                                    placeholder="Tarefa">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="dataInicio" class="form-label">Data início</label>
+                                <input type="date" class="form-control" id="dataInicio"
+                                    placeholder="data_inicio">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="horaInicio" class="form-label">Hora início</label>
+                                <input type="time" class="form-control" id="horaInicio" placeholder="hora_inicio">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="dataTermino" class="form-label">Data término</label>
+                                <input type="date" class="form-control" id="dataTermino" placeholder="Data_termino">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="horaTermino" class="form-label">Hora término</label>
+                                <input type="time" class="form-control" id="horaTermino" placeholder="Hora_término">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="descricaoTarefa" class="form-label">Descrição</label>
+                                <textarea class="form-control" id="descricaoTarefa" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex;" >
+                    <a type="submit" href="index.html" class="btn btn-primary">Alterar tarefa</a>
+                    <a type="button" class="btn btn-danger">Excluir tarefa</a>
+                    <a type="button" class="btn btn-success">Marcar como realizada</a>
+                    <a type="button" class="btn btn-secondary">Cancelar</a>
+                </div>
                 </form>
             </div>
         </div>

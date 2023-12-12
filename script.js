@@ -34,7 +34,7 @@ cadForm.addEventListener('submit', (e) => {
         window.location.href = "index.html"
     }else{
     // Adiciona um novo objeto no array de usuarios
-    usuarios.push({ email_usuario: emailUsuario, nome_usuario: nomeUsuario, senha_usuario: senhaUsuario, tarefas: []});
+    usuarios.push({ email_usuario: emailUsuario, nome_usuario: nomeUsuario, senha_usuario: senhaUsuario, tarefas: [], ultimaTarefa : 0});
 
     // Salva no localStorage
     localStorage.setItem("usuarios", JSON.stringify(usuarios));
@@ -81,7 +81,12 @@ function adicionarTarefa(event) {
 
     if (usuarioIndex !== -1) {
         // Adicionar a nova tarefa ao usuário logado
+        idTarefaAnterior = JSON.parse(localStorage.getItem("ultimaTarefa"));
+        alert(JSON.stringify(idTarefaAnterior));
+        let idTarefa;
+        alert(idTarefa);
         let tarefaCriada = {
+            idTarefa : idTarefaAnterior + 1,
             nomeTarefa : document.getElementById('nomeTarefa').value,
             dataInicio: document.getElementById('dataInicio').value,
             horaInicio: document.getElementById('horaInicio').value,
@@ -91,8 +96,11 @@ function adicionarTarefa(event) {
             };
 
         usuarios[usuarioIndex].tarefas.push(tarefaCriada);
+        //usuarios[usuarioIndex].tarefas.ultimaTarefa.push(idTarefa);
 
         // Atualizar o localStorage com o novo array de usuários
+        ///localStorage.setItem("ultimaTarefa", idTarefa).value;
+        localStorage.setItem("ultimaTarefa", JSON.stringify(tarefaCriada.idTarefa));
         localStorage.setItem("usuarios", JSON.stringify(usuarios));
         localStorage.setItem("usuarioLogado", JSON.stringify(usuarios[usuarioIndex]));
         alert("Tarefa criada com sucesso.");
@@ -108,12 +116,8 @@ function exibirTarefas() {
     let tbody = document.querySelector("#tabelaTarefas tbody");
 
     if (usuarioLogado) {
-        // Limpa o conteúdo do tbody antes de exibir as tarefas
         tbody.innerHTML = "";
-
-        // Verifica se o usuário tem tarefas
         if (usuarioLogado.tarefas.length > 0) {
-            // Cria as linhas da tabela com as tarefas do usuário logado
             usuarioLogado.tarefas.forEach((tarefa, index) => {
                 let row = tbody.insertRow();
                 let cellTarefa = row.insertCell(0);
@@ -123,17 +127,32 @@ function exibirTarefas() {
                 let cellAlterar = row.insertCell(4);
 
                 cellTarefa.textContent = tarefa.nomeTarefa || '';
-                cellDataInicio.textContent = tarefa.dataInicio +" às "+tarefa.horaInicio || '';
-                cellDataTermino.textContent = tarefa.dataTermino +" às "+tarefa.horaTermino || '';
+                cellDataInicio.textContent = tarefa.dataInicio + " às " + tarefa.horaInicio || '';
+                cellDataTermino.textContent = tarefa.dataTermino + " às " + tarefa.horaTermino || '';
                 cellStatus.textContent = tarefa.statusTarefa || '';
 
                 let btnAlterar = document.createElement('button');
                 btnAlterar.textContent = 'Alterar';
-                btnAlterar.classList.add('btn', 'btn-success');
-                btnAlterar.addEventListener('click', function() {
+                btnAlterar.classList.add('btn', 'btn-warning');
+
+                // Adiciona um atributo "data-id" ao botão com o ID da tarefa
+                btnAlterar.setAttribute('data-id', tarefa.idTarefa);
+
+                btnAlterar.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Captura o ID ao clicar no botão
+                    let idTarefa = e.target.getAttribute('data-id');
+
+                    // Lógica para exibir o formulário de edição e usar o ID capturado (idTarefa) para edição
+                    document.getElementById("criacaoTarefa").style.display = 'none';
+                    document.getElementById("edicaoTarefa").style.display = 'block';
+
+                    // Aqui, você pode preencher o formulário de edição com os detalhes da tarefa usando o ID
+                    // Isso é um exemplo, você precisa implementar o preenchimento com os detalhes da tarefa
+                    alert("Você entrou no modo de edição da tarefa com o ID: " + idTarefa);
                 });
+
                 cellAlterar.appendChild(btnAlterar);
-               
             });
         } else {
             tbody.innerHTML = "<tr><td colspan='6'>Nenhuma tarefa encontrada.</td></tr>";
@@ -141,4 +160,14 @@ function exibirTarefas() {
     } else {
         tbody.innerHTML = "<tr><td colspan='6'>Usuário não logado ou não encontrado.</td></tr>";
     }
+}
+
+function alterarTarefa(event){
+    event.preventDefault;
+    alert(a);
+
+
+
+
+
 }
