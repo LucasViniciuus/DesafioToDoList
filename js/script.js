@@ -142,11 +142,26 @@ function exibirTarefas() {
                     e.preventDefault();
                     // Captura o ID ao clicar no botão
                     let idTarefa = e.target.getAttribute('data-id');
+                    usuSessao = JSON.parse(localStorage.getItem('usuarioLogado'));
+                    if(usuSessao.tarefas.idTarefa = idTarefa){
+                        tarefao = usuSessao.tarefas[idTarefa - 1];
+                        //alert(JSON.stringify(tarefao));
+                        localStorage.setItem("idAcao", idTarefa);
 
-                    // Lógica para exibir o formulário de edição e usar o ID capturado (idTarefa) para edição
-                    document.getElementById("criacaoTarefa").style.display = 'none';
-                    document.getElementById("edicaoTarefa").style.display = 'block';
+                        document.getElementById("nomeTarefaEdit").value = tarefao.nomeTarefa;
+                        document.getElementById("dataInicioEdit").value = tarefao.dataInicio;
+                        document.getElementById("horaInicioEdit").value = tarefao.horaInicio;
+                        document.getElementById("dataTerminoEdit").value = tarefao.dataTermino;
+                        document.getElementById("horaTerminoEdit").value = tarefao.horaTermino;
 
+
+                        document.getElementById("criacaoTarefa").style.display = 'none';
+                        document.getElementById("edicaoTarefa").style.display = 'block';
+
+
+                    }else{
+                        alert('Não foi encontrada nenhuma tarefa que tivesse correspondência com o Id informado.')
+                    }
                     // Aqui, você pode preencher o formulário de edição com os detalhes da tarefa usando o ID
                     // Isso é um exemplo, você precisa implementar o preenchimento com os detalhes da tarefa
                     alert("Você entrou no modo de edição da tarefa com o ID: " + idTarefa);
@@ -163,11 +178,40 @@ function exibirTarefas() {
 }
 
 function alterarTarefa(event){
-    event.preventDefault;
-    alert(a);
+    event.preventDefault();
+    let nomeTarefaEdit = document.getElementById("nomeTarefaEdit").value;
+    let dataInicioEdit = document.getElementById("dataInicioEdit").value;
+    let horaInicioEdit = document.getElementById("horaInicioEdit").value;
+    let dataTerminoEdit = document.getElementById("dataTerminoEdit").value;
+    let horaTerminoEdit = document.getElementById("horaTerminoEdit").value;
 
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    let idAcao = JSON.parse(localStorage.getItem("idAcao"));
+    let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
+    let usuarioIndex = usuarios.findIndex(user => user.email_usuario === usuarioLogado.email_usuario);
 
+    if(usuarioIndex !== -1){
+        let tarefaIndex = usuarios[usuarioIndex].tarefas.findIndex(tarefa => tarefa.idTarefa === idAcao);
 
+        if(tarefaIndex !== -1) {
+            usuarios[usuarioIndex].tarefas[tarefaIndex].nomeTarefa = nomeTarefaEdit;
+            usuarios[usuarioIndex].tarefas[tarefaIndex].dataInicio = dataInicioEdit;
+            usuarios[usuarioIndex].tarefas[tarefaIndex].horaInicio = horaInicioEdit;
+            usuarios[usuarioIndex].tarefas[tarefaIndex].dataTermino = dataTerminoEdit;
+            usuarios[usuarioIndex].tarefas[tarefaIndex].horaTermino = horaTerminoEdit;
 
+            localStorage.setItem("usuarios", JSON.stringify(usuarios));
+            localStorage.setItem("usuarioLogado", JSON.stringify(usuarios[usuarioIndex]));
+
+            alert("Tarefa atualizada com sucesso!");
+            window.location.href = "gerenciador_tarefas.html";
+        }else {
+            alert('Não foi encontrada nenhuma tarefa que corresponda ao ID informado.');
+        }
+    } else {
+        alert('Usuário não encontrado.');
+    }
 }
+
+

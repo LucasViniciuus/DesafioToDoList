@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
@@ -50,7 +50,7 @@
                             <div class="mb-3">
                                 <label for="nomeTarefa" class="form-label">Tarefa</label>
                                 <input type="text" class="form-control" id="nomeTarefa"
-                                    placeholder="Tarefa">
+                                    placeholder="Tarefa" required>
                             </div>
                         </div>
                     </div>
@@ -59,13 +59,13 @@
                             <div class="mb-3">
                                 <label for="dataInicio" class="form-label">Data início</label>
                                 <input type="date" class="form-control" id="dataInicio"
-                                    placeholder="data_inicio">
+                                    placeholder="data_inicio" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="horaInicio" class="form-label">Hora início</label>
-                                <input type="time" class="form-control" id="horaInicio" placeholder="hora_inicio">
+                                <input type="time" class="form-control" id="horaInicio" placeholder="hora_inicio" required>
                             </div>
                         </div>
                     </div>
@@ -73,13 +73,13 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="dataTermino" class="form-label">Data término</label>
-                                <input type="date" class="form-control" id="dataTermino" placeholder="Data_termino">
+                                <input type="date" class="form-control" id="dataTermino" placeholder="Data_termino" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="horaTermino" class="form-label">Hora término</label>
-                                <input type="time" class="form-control" id="horaTermino" placeholder="Hora_término">
+                                <input type="time" class="form-control" id="horaTermino" placeholder="Hora_término" required>
                             </div>
                         </div>
                     </div>
@@ -98,8 +98,8 @@
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label for="nomeTarefa" class="form-label">Tarefa</label>
-                                <input type="text" class="form-control" id="nomeTarefa"
-                                    placeholder="Tarefa">
+                                <input type="text" class="form-control" id="nomeTarefaEdit"
+                                    placeholder="Tarefa" required>
                             </div>
                         </div>
                     </div>
@@ -107,14 +107,14 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="dataInicio" class="form-label">Data início</label>
-                                <input type="date" class="form-control" id="dataInicio"
-                                    placeholder="data_inicio">
+                                <input type="date" class="form-control" id="dataInicioEdit"
+                                    placeholder="data_inicio" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="horaInicio" class="form-label">Hora início</label>
-                                <input type="time" class="form-control" id="horaInicio" placeholder="hora_inicio">
+                                <input type="time" class="form-control" id="horaInicioEdit" placeholder="hora_inicio" required>
                             </div>
                         </div>
                     </div>
@@ -122,13 +122,13 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="dataTermino" class="form-label">Data término</label>
-                                <input type="date" class="form-control" id="dataTermino" placeholder="Data_termino">
+                                <input type="date" class="form-control" id="dataTerminoEdit" placeholder="Data_termino" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="horaTermino" class="form-label">Hora término</label>
-                                <input type="time" class="form-control" id="horaTermino" placeholder="Hora_término">
+                                <input type="time" class="form-control" id="horaTerminoEdit" placeholder="Hora_término" required>
                             </div>
                         </div>
                     </div>
@@ -136,15 +136,15 @@
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label for="descricaoTarefa" class="form-label">Descrição</label>
-                                <textarea class="form-control" id="descricaoTarefa" rows="4"></textarea>
+                                <textarea class="form-control" id="descricaoTarefaEdit" rows="4"></textarea>
                             </div>
                         </div>
                     </div>
                     <div style="display: flex;" >
-                    <a type="submit" href="index.html" class="btn btn-primary">Alterar tarefa</a>
+                    <a type="submit" onclick="alterarTarefa(event);" class="btn btn-primary">Alterar tarefa<a>
                     <a type="button" class="btn btn-danger">Excluir tarefa</a>
                     <a type="button" class="btn btn-success">Marcar como realizada</a>
-                    <a type="button" class="btn btn-secondary">Cancelar</a>
+                    <a type="button" href="gerenciador_tarefas.html" class="btn btn-secondary">Cancelar</a>
                 </div>
                 </form>
             </div>
@@ -174,7 +174,7 @@
 </div>
    
  
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 
 </html>
