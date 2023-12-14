@@ -82,8 +82,11 @@ function adicionarTarefa(event) {
     if (usuarioIndex !== -1) {
         // Adicionar a nova tarefa ao usuário logado
         idTarefaAnterior = JSON.parse(localStorage.getItem("ultimaTarefa"));
+        if(idTarefaAnterior === null){
+            idTarefaAnterior = 0;
+        }
         alert(JSON.stringify(idTarefaAnterior));
-        let idTarefa;
+        let idTarefa = 0;
         alert(idTarefa);
         let tarefaCriada = {
             idTarefa : idTarefaAnterior + 1,
@@ -92,7 +95,8 @@ function adicionarTarefa(event) {
             horaInicio: document.getElementById('horaInicio').value,
             dataTermino: document.getElementById('dataTermino').value,
             horaTermino: document.getElementById('horaTermino').value,
-            descricaoTarefa: document.getElementById('descricaoTarefa').value
+            descricaoTarefa: document.getElementById('descricaoTarefa').value,
+            statusTarefa: ''
             };
 
         usuarios[usuarioIndex].tarefas.push(tarefaCriada);
@@ -225,10 +229,12 @@ function excluirTarefa(event){
         alert("Tarefa excluída com sucesso.");
         usuarios[usuarioIndex].tarefas.splice(tarefaIndex, 1); // Remove a tarefa do array de tarefas
 
-        // Atualiza os IDs das tarefas restantes após a exclusão
         for (let i = tarefaIndex; i < usuarios[usuarioIndex].tarefas.length; i++) {
             usuarios[usuarioIndex].tarefas[i].idTarefa = usuarios[usuarioIndex].tarefas[i].idTarefa - 1;
         }
+        let ultimaTarefaAlt = JSON.parse(localStorage.getItem("ultimaTarefa"));
+        let ultimaTarefaAtt = ultimaTarefaAlt - 1;
+        localStorage.setItem("ultimaTarefa", JSON.stringify(ultimaTarefaAtt));
 
         localStorage.setItem("usuarios", JSON.stringify(usuarios)); // Atualiza o armazenamento local
         usuarioLogado = usuarios[usuarioIndex];
@@ -237,4 +243,17 @@ function excluirTarefa(event){
         window.location.href = "gerenciador_tarefas.html";
     }
 }
+function alterarStatus(event){
+    event.preventDefault();
+    
+    let usuarios = JSON.parse(localStorage.getItem("usuarios"));
+    let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    let usuarioIndex = usuarios.findIndex(user => user.email_usuario === usuarioLogado.email_usuario);
+    let idAcao = JSON.parse(localStorage.getItem("idAcao"));
+    let tarefaIndex = usuarios[usuarioIndex].tarefas.findIndex(tarefa => tarefa.idTarefa === idAcao);
 
+    usuarios[usuarioIndex].tarefas[tarefaIndex].statusTarefa = 'Realizada';
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+    localStorage.setItem("usuarioLogado", JSON.stringify(usuarios[usuarioIndex]));
+    window.location.href = 'gerenciador_tarefas.html';
+}
