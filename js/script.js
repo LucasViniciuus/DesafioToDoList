@@ -34,7 +34,7 @@ cadForm.addEventListener('submit', (e) => {
         window.location.href = "index.html"
     }else{
     // Adiciona um novo objeto no array de usuarios
-    usuarios.push({ email_usuario: emailUsuario, nome_usuario: nomeUsuario, senha_usuario: senhaUsuario, tarefas: [], ultimaTarefa : 0});
+    usuarios.push({ email_usuario: emailUsuario, nome_usuario: nomeUsuario, senha_usuario: senhaUsuario, tarefas: []});
 
     // Salva no localStorage
     localStorage.setItem("usuarios", JSON.stringify(usuarios));
@@ -213,5 +213,28 @@ function alterarTarefa(event){
         alert('Usuário não encontrado.');
     }
 }
+function excluirTarefa(event){
+    event.preventDefault();
+    let idAcao = JSON.parse(localStorage.getItem("idAcao"));
+    let usuarios = JSON.parse(localStorage.getItem("usuarios"));
+    let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    let usuarioIndex = usuarios.findIndex(user => user.email_usuario === usuarioLogado.email_usuario);
+    let tarefaIndex = usuarios[usuarioIndex].tarefas.findIndex(tarefa => tarefa.idTarefa === idAcao);
+    
+    if(tarefaIndex !== -1){
+        alert("Tarefa excluída com sucesso.");
+        usuarios[usuarioIndex].tarefas.splice(tarefaIndex, 1); // Remove a tarefa do array de tarefas
 
+        // Atualiza os IDs das tarefas restantes após a exclusão
+        for (let i = tarefaIndex; i < usuarios[usuarioIndex].tarefas.length; i++) {
+            usuarios[usuarioIndex].tarefas[i].idTarefa = usuarios[usuarioIndex].tarefas[i].idTarefa - 1;
+        }
+
+        localStorage.setItem("usuarios", JSON.stringify(usuarios)); // Atualiza o armazenamento local
+        usuarioLogado = usuarios[usuarioIndex];
+        localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+        exibirTarefas(); // Atualiza a exibição das tarefas após a exclusão
+        window.location.href = "gerenciador_tarefas.html";
+    }
+}
 
