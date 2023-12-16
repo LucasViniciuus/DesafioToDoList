@@ -1,9 +1,10 @@
-window.onload = function() {
-    exibirTarefas(); // Chama a função para exibir as tarefas na tabela
+window.onload = function () {
+    // -- Chama a função para exibir as tarefas na tabela -- //
+    exibirTarefas();
     let usuarioLogadoSessao = JSON.parse(localStorage.getItem("usuarioLogado"));
     let tag_usu = document.getElementById("usuarioSessaoNome");
     tag_usu.innerHTML = "Bem vindo, " + usuarioLogadoSessao.nome_usuario;
-    
+
 };
 
 var cadForm = document.getElementById("form_cadastro");
@@ -22,24 +23,23 @@ cadForm.addEventListener('submit', (e) => {
     let usuarios = new Array();
 
     if (localStorage.hasOwnProperty("usuarios")) {
-        //recuperar os valores da propriedade usuarios do localStorage
-        //converte string para object
+        // -- recuperar os valores da propriedade usuarios do localStorage e converte string para object -- //
         usuarios = JSON.parse(localStorage.getItem("usuarios"));
     }
     let usuarioDuplicado = usuarios.find(usuario => {
         return usuario.email_usuario === emailUsuario;
     });
-    if(usuarioDuplicado){
+    if (usuarioDuplicado) {
         alert("Já existe um usuário cadastrado com o email informado.\nEmail já utilizado: " + emailUsuario);
         window.location.href = "index.html"
-    }else{
-    // Adiciona um novo objeto no array de usuarios
-    usuarios.push({ email_usuario: emailUsuario, nome_usuario: nomeUsuario, senha_usuario: senhaUsuario, tarefas: []});
+    } else {
+        // -- Adiciona um novo objeto no array de usuarios -- //
+        usuarios.push({ email_usuario: emailUsuario, nome_usuario: nomeUsuario, senha_usuario: senhaUsuario, tarefas: [] });
 
-    // Salva no localStorage
-    localStorage.setItem("usuarios", JSON.stringify(usuarios));
-    alert("Usuário criado com sucesso!")
-    window.location.href = "index.html"
+        // -- Salva no localStorage -- //
+        localStorage.setItem("usuarios", JSON.stringify(usuarios));
+        alert("Usuário criado com sucesso!")
+        window.location.href = "index.html"
     }
 });
 
@@ -51,19 +51,18 @@ loginForm.addEventListener('submit', (l) => {
 
     let emailLogin = document.getElementById('emailLogin').value;
     let senhaLogin = document.getElementById('senhaLogin').value;
-    
-    //procura usuários cadastrados:
+    // -- Procura usuários cadastrados -- //
     let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-    //vê se há correspondência com os parametros que chegaram em relação a lista de cadastros:
+    // -- Vê se há correspondência com os parametros que chegaram em relação a lista de cadastros: -- //
     let usuarioAutentica = usuarios.find(usuario => {
         return usuario.email_usuario === emailLogin && usuario.senha_usuario === senhaLogin;
     });
-    if(usuarioAutentica){
+    if (usuarioAutentica) {
         localStorage.setItem("usuarioLogado", JSON.stringify(usuarioAutentica));
         alert("Você está autênticado.")
         window.location.href = "gerenciador_tarefas.html"
-    }else{
+    } else {
         alert("OOPS! Sua senha ou email estão incorretos.")
         window.location.href = "index.html"
     }
@@ -76,40 +75,35 @@ function adicionarTarefa(event) {
     let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
     let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-    // Encontrar o usuário logado no array de usuários
+    // -- Encontrar o usuário logado no array de usuários -- //
     let usuarioIndex = usuarios.findIndex(user => user.email_usuario === usuarioLogado.email_usuario);
 
     if (usuarioIndex !== -1) {
-        // Adicionar a nova tarefa ao usuário logado
+
+        // -- Adicionar a nova tarefa ao usuário logado -- //
         idTarefaAnterior = JSON.parse(localStorage.getItem("ultimaTarefa"));
-        if(idTarefaAnterior === null){
+        if (idTarefaAnterior === null) {
             idTarefaAnterior = 0;
         }
-        alert(JSON.stringify(idTarefaAnterior));
         let idTarefa = 0;
-        alert(idTarefa);
         let tarefaCriada = {
-            idTarefa : idTarefaAnterior + 1,
-            nomeTarefa : document.getElementById('nomeTarefa').value,
+            idTarefa: idTarefaAnterior + 1,
+            nomeTarefa: document.getElementById('nomeTarefa').value,
             dataInicio: document.getElementById('dataInicio').value,
             horaInicio: document.getElementById('horaInicio').value,
             dataTermino: document.getElementById('dataTermino').value,
             horaTermino: document.getElementById('horaTermino').value,
             descricaoTarefa: document.getElementById('descricaoTarefa').value,
             statusTarefa: ''
-            };
+        };
 
         usuarios[usuarioIndex].tarefas.push(tarefaCriada);
-        //usuarios[usuarioIndex].tarefas.ultimaTarefa.push(idTarefa);
-
-        // Atualizar o localStorage com o novo array de usuários
-        ///localStorage.setItem("ultimaTarefa", idTarefa).value;
         localStorage.setItem("ultimaTarefa", JSON.stringify(tarefaCriada.idTarefa));
         localStorage.setItem("usuarios", JSON.stringify(usuarios));
         localStorage.setItem("usuarioLogado", JSON.stringify(usuarios[usuarioIndex]));
         alert("Tarefa criada com sucesso.");
         window.location.href = "gerenciador_tarefas.html";
-        
+
     } else {
         alert("Não foi possível criar uma tarefa.");
     }
@@ -122,7 +116,9 @@ function exibirTarefas() {
     if (usuarioLogado) {
         tbody.innerHTML = "";
         if (usuarioLogado.tarefas.length > 0) {
-            usuarioLogado.tarefas.forEach((tarefa, index) => {
+            usuarioLogado.tarefas.forEach((tarefa) => {
+
+                // -- Células -- //
                 let row = tbody.insertRow();
                 let cellTarefa = row.insertCell(0);
                 let cellDataInicio = row.insertCell(1);
@@ -130,45 +126,80 @@ function exibirTarefas() {
                 let cellStatus = row.insertCell(3);
                 let cellAlterar = row.insertCell(4);
 
-                cellTarefa.textContent = tarefa.nomeTarefa || '';
-                cellDataInicio.textContent = tarefa.dataInicio + " às " + tarefa.horaInicio || '';
-                cellDataTermino.textContent = tarefa.dataTermino + " às " + tarefa.horaTermino || '';
-                cellStatus.textContent = tarefa.statusTarefa || '';
+                // -- Datas (formatação) -- //
+                let dataInicioAmericana = tarefa.dataInicio;
+                let dataInicioFormatada = dataInicioAmericana.split('-').reverse().join('/');
+                let dataTerminoAmericana = tarefa.dataTermino;
+                let dataTerminoFormatada = dataTerminoAmericana.split('-').reverse().join('/');
 
+                // -- Status relacionado às datas -- //
+                let dataPTBRTermino = dataTerminoFormatada;
+                let parts = dataPTBRTermino.split('/')
+                let dataAtual = new Date();
+                dataPTBRTermino = new Date(parts[2], parts[1] - 1, parts[0]);
+
+                if (tarefa.statusTarefa !== 'Realizada') {
+                    if (dataAtual.getTime() > dataPTBRTermino.getTime()) {
+                        tarefa.statusTarefa = 'Em atraso';
+                        cellStatus.textContent = tarefa.statusTarefa || '';
+                        cellStatus.style.color = 'red';
+                    } else {
+                        let intervalo24H = 24 * 60 * 60 * 1000;
+                        if (dataPTBRTermino.getTime() - dataAtual.getTime() < intervalo24H) {
+                            tarefa.statusTarefa = 'Pendente';
+                            cellStatus.textContent = tarefa.statusTarefa || '';
+                            cellStatus.style.color = 'Orange';
+                        } else {
+                            tarefa.statusTarefa = 'Em andamento';
+                            cellStatus.textContent = tarefa.statusTarefa || '';
+                            cellStatus.style.color = 'blue';
+                        }
+                    }
+                } else {
+                    cellStatus.textContent = tarefa.statusTarefa || '';
+                    cellStatus.style.color = 'green';
+                }
+
+                cellTarefa.textContent = tarefa.nomeTarefa || '';
+                cellTarefa.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const descricao = tarefa.descricaoTarefa || 'Descrição não encontrada';
+                    const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+                    const modalBody = document.querySelector('.modal-body');
+                    let modalLabel = document.getElementById("exampleModalLabel");
+
+                    modalLabel.innerHTML = `Descrição da tarefa "${tarefa.nomeTarefa}"`;
+                    modalBody.textContent = descricao;
+
+                    modal.show();
+                });
+                cellDataInicio.textContent = dataInicioFormatada + " às " + tarefa.horaInicio || '';
+                cellDataTermino.textContent = dataTerminoFormatada + " às " + tarefa.horaTermino || '';
+                // -- Botão alterar -- //
                 let btnAlterar = document.createElement('button');
                 btnAlterar.textContent = 'Alterar';
                 btnAlterar.classList.add('btn', 'btn-warning');
-
-                // Adiciona um atributo "data-id" ao botão com o ID da tarefa
                 btnAlterar.setAttribute('data-id', tarefa.idTarefa);
-
                 btnAlterar.addEventListener('click', (e) => {
                     e.preventDefault();
-                    // Captura o ID ao clicar no botão
                     let idTarefa = e.target.getAttribute('data-id');
                     usuSessao = JSON.parse(localStorage.getItem('usuarioLogado'));
-                    if(usuSessao.tarefas.idTarefa = idTarefa){
-                        tarefao = usuSessao.tarefas[idTarefa - 1];
-                        //alert(JSON.stringify(tarefao));
+                    let tarefaEncontrada = usuSessao.tarefas.find(tarefa => tarefa.idTarefa === parseInt(idTarefa));
+
+                    if (tarefaEncontrada) {
                         localStorage.setItem("idAcao", idTarefa);
 
-                        document.getElementById("nomeTarefaEdit").value = tarefao.nomeTarefa;
-                        document.getElementById("dataInicioEdit").value = tarefao.dataInicio;
-                        document.getElementById("horaInicioEdit").value = tarefao.horaInicio;
-                        document.getElementById("dataTerminoEdit").value = tarefao.dataTermino;
-                        document.getElementById("horaTerminoEdit").value = tarefao.horaTermino;
-
+                        document.getElementById("nomeTarefaEdit").value = tarefaEncontrada.nomeTarefa;
+                        document.getElementById("dataInicioEdit").value = tarefaEncontrada.dataInicio;
+                        document.getElementById("horaInicioEdit").value = tarefaEncontrada.horaInicio;
+                        document.getElementById("dataTerminoEdit").value = tarefaEncontrada.dataTermino;
+                        document.getElementById("horaTerminoEdit").value = tarefaEncontrada.horaTermino;
 
                         document.getElementById("criacaoTarefa").style.display = 'none';
                         document.getElementById("edicaoTarefa").style.display = 'block';
-
-
-                    }else{
-                        alert('Não foi encontrada nenhuma tarefa que tivesse correspondência com o Id informado.')
+                    } else {
+                        alert('Não foi encontrada nenhuma tarefa correspondente ao ID informado.');
                     }
-                    // Aqui, você pode preencher o formulário de edição com os detalhes da tarefa usando o ID
-                    // Isso é um exemplo, você precisa implementar o preenchimento com os detalhes da tarefa
-                    alert("Você entrou no modo de edição da tarefa com o ID: " + idTarefa);
                 });
 
                 cellAlterar.appendChild(btnAlterar);
@@ -181,71 +212,76 @@ function exibirTarefas() {
     }
 }
 
-function alterarTarefa(event){
+function alterarTarefa(event) {
     event.preventDefault();
     let nomeTarefaEdit = document.getElementById("nomeTarefaEdit").value;
     let dataInicioEdit = document.getElementById("dataInicioEdit").value;
     let horaInicioEdit = document.getElementById("horaInicioEdit").value;
     let dataTerminoEdit = document.getElementById("dataTerminoEdit").value;
     let horaTerminoEdit = document.getElementById("horaTerminoEdit").value;
-
+    let descricaoTarefaEdit = document.getElementById("descricaoTarefaEdit").value;
     let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
     let idAcao = JSON.parse(localStorage.getItem("idAcao"));
     let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-
     let usuarioIndex = usuarios.findIndex(user => user.email_usuario === usuarioLogado.email_usuario);
 
-    if(usuarioIndex !== -1){
+    if (usuarioIndex !== -1) {
         let tarefaIndex = usuarios[usuarioIndex].tarefas.findIndex(tarefa => tarefa.idTarefa === idAcao);
 
-        if(tarefaIndex !== -1) {
+        if (tarefaIndex !== -1) {
             usuarios[usuarioIndex].tarefas[tarefaIndex].nomeTarefa = nomeTarefaEdit;
             usuarios[usuarioIndex].tarefas[tarefaIndex].dataInicio = dataInicioEdit;
             usuarios[usuarioIndex].tarefas[tarefaIndex].horaInicio = horaInicioEdit;
             usuarios[usuarioIndex].tarefas[tarefaIndex].dataTermino = dataTerminoEdit;
             usuarios[usuarioIndex].tarefas[tarefaIndex].horaTermino = horaTerminoEdit;
+            usuarios[usuarioIndex].tarefas[tarefaIndex].descricaoTarefa = descricaoTarefaEdit;
 
             localStorage.setItem("usuarios", JSON.stringify(usuarios));
             localStorage.setItem("usuarioLogado", JSON.stringify(usuarios[usuarioIndex]));
 
             alert("Tarefa atualizada com sucesso!");
             window.location.href = "gerenciador_tarefas.html";
-        }else {
+        } else {
             alert('Não foi encontrada nenhuma tarefa que corresponda ao ID informado.');
         }
     } else {
         alert('Usuário não encontrado.');
     }
 }
-function excluirTarefa(event){
+function excluirTarefa(event) {
     event.preventDefault();
     let idAcao = JSON.parse(localStorage.getItem("idAcao"));
     let usuarios = JSON.parse(localStorage.getItem("usuarios"));
     let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
     let usuarioIndex = usuarios.findIndex(user => user.email_usuario === usuarioLogado.email_usuario);
     let tarefaIndex = usuarios[usuarioIndex].tarefas.findIndex(tarefa => tarefa.idTarefa === idAcao);
-    
-    if(tarefaIndex !== -1){
+
+    if (tarefaIndex !== -1) {
         alert("Tarefa excluída com sucesso.");
-        usuarios[usuarioIndex].tarefas.splice(tarefaIndex, 1); // Remove a tarefa do array de tarefas
+        usuarios[usuarioIndex].tarefas.splice(tarefaIndex, 1);
 
         for (let i = tarefaIndex; i < usuarios[usuarioIndex].tarefas.length; i++) {
             usuarios[usuarioIndex].tarefas[i].idTarefa = usuarios[usuarioIndex].tarefas[i].idTarefa - 1;
         }
+
         let ultimaTarefaAlt = JSON.parse(localStorage.getItem("ultimaTarefa"));
         let ultimaTarefaAtt = ultimaTarefaAlt - 1;
-        localStorage.setItem("ultimaTarefa", JSON.stringify(ultimaTarefaAtt));
 
-        localStorage.setItem("usuarios", JSON.stringify(usuarios)); // Atualiza o armazenamento local
+        localStorage.setItem("ultimaTarefa", JSON.stringify(ultimaTarefaAtt));
+        localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
         usuarioLogado = usuarios[usuarioIndex];
+
         localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
-        exibirTarefas(); // Atualiza a exibição das tarefas após a exclusão
+
+        exibirTarefas();
+
         window.location.href = "gerenciador_tarefas.html";
     }
 }
-function alterarStatus(event){
+function alterarStatus(event) {
     event.preventDefault();
-    
+
     let usuarios = JSON.parse(localStorage.getItem("usuarios"));
     let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
     let usuarioIndex = usuarios.findIndex(user => user.email_usuario === usuarioLogado.email_usuario);
@@ -253,7 +289,9 @@ function alterarStatus(event){
     let tarefaIndex = usuarios[usuarioIndex].tarefas.findIndex(tarefa => tarefa.idTarefa === idAcao);
 
     usuarios[usuarioIndex].tarefas[tarefaIndex].statusTarefa = 'Realizada';
+
     localStorage.setItem("usuarios", JSON.stringify(usuarios));
     localStorage.setItem("usuarioLogado", JSON.stringify(usuarios[usuarioIndex]));
+
     window.location.href = 'gerenciador_tarefas.html';
 }
